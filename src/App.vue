@@ -10,7 +10,9 @@
         </template>
       </cm-table-column>
 
-      <cm-table-column prop="name" title="Product name" />
+      <cm-table-column prop="name" title="Product name" :isFilter="true" />
+
+			<cm-table-column prop="category" title="Category" :isFilter="true" />
 
       <cm-table-column prop="description" title="Description" />
 
@@ -47,11 +49,14 @@ export default {
   },
 	created() {
 		this.rows = rows;
-	}
+	},
 };
 </script>
 
 <style>
+* {
+	box-sizing: border-box;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

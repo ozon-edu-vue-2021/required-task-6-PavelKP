@@ -6,6 +6,7 @@ export const rows = [
 		price: 150,
 		email: "Eliseo@gardner.biz",
 		image: "https://picsum.photos/id/1/100",
+		category: 'cheese',
 	},
 	{
 		id: 2,
@@ -14,14 +15,16 @@ export const rows = [
 		price: 65,
 		email: "wdwd@gardner.biz",
 		image: "https://picsum.photos/id/2/100",
+		category: 'milk',
 	},
 	{
 		id: 3,
-		name: "Творог 5%",
-		description: "Из сухого молока от лучших коров подмосковья",
+		name: "Колбаса \"Любительская\"",
+		description: "Из шкур КРС",
 		price: 125,
 		email: "tvorog@gardner.biz",
 		image: "https://picsum.photos/id/3/100",
+		category: 'sausage',
 	},
 	{
 		id: 4,
@@ -30,5 +33,15 @@ export const rows = [
 		price: 100,
 		email: "tvorog@gardner.biz",
 		image: "https://picsum.photos/id/4/100",
+		category: 'curd',
+	},
+	{
+		id: 5,
+		name: "Сырок бюджетный",
+		description: "Сырок из пальмового масла",
+		price: 10,
+		email: "tvorog@gardner.biz",
+		image: "https://picsum.photos/id/5/100",
+		category: 'curd',
 	},
 ];

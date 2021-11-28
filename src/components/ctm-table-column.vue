@@ -11,6 +11,9 @@ export default {
 		},
 		width: {
 			type: String,
+		},
+		isFilter: {
+			type: Boolean,
 		}
   },
 };

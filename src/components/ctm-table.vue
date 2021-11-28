@@ -4,8 +4,13 @@ export default {
 		rows: {
 			type: Array,
 			default: () => [],
-		}
+		},
   },
+	data() {
+		return {
+			filteredRows: [],
+		}
+	},
 	methods: {
 		getColumnOptions() {
 			const slots = this.$slots.default;
@@ -21,18 +26,46 @@ export default {
 			return options;
 		},
 		renderHeader(h, columnOptions) {
-			return columnOptions.map((option) => {
+			const headerData = columnOptions.map((option) => {
 				const renderedTitle = option.scopedSlots.title ? option.scopedSlots.title() : option.title
 
+				const tableCellStyle = {
+					style: {
+						width: option.width && `${option.width}px`,
+					}
+				}
+
+				if (option.isFilter) {
+					return (
+						<th key={option.prop} class={this.$style?.filterCell} {...tableCellStyle}>
+							<div>
+								<div class={this.$style?.filterCellText}>
+									{renderedTitle}
+								</div>
+								<input
+									onInput={(evt) => this.changeFilter(evt, option.prop)}
+									class={this.$style?.filterInput} 
+								/>
+							</div>
+						</th>
+					);
+				}
+
 				return (
-					<th key={option.prop} class={this.$style?.tableHeaderCell}>
+					<th key={option.prop} class={this.$style?.tableHeaderCell} {...tableCellStyle}>
 						{renderedTitle}
 					</th>
 				);
 			});
+
+			return (
+				<tr>
+					{...headerData}
+				</tr>
+			)
 		},
 		renderRows(h, columnOptions) {
-			return this.rows.map((row, index) => {
+			return this.filteredRows.map((row, index) => {
 				return (
 					<tr key={row.id || index}>
 						{this.renderCell(h, row, columnOptions)}
@@ -57,6 +90,21 @@ export default {
 				);
 			})
 		},
+		changeFilter(evt, prop) {
+			const len = this.filteredRows.length;
+
+			const filtered = this.rows.filter((row) => {
+				const field = row[prop].toLowerCase();
+				const value = evt.target.value.toLowerCase();
+
+				return field.includes(value);
+			})
+
+			this.filteredRows = filtered;
+		}
+	},
+	created() {
+		this.filteredRows = this.rows.slice();
 	},
 	render(h) {
 		const columnOptions = this.getColumnOptions();
@@ -66,7 +114,7 @@ export default {
 		return (
 			<table class={this.$style?.table}>
 				<thead>
-					{...tableHeader}
+					{tableHeader}
 				</thead>
 				<tbody>
 					{...tableRows}
@@ -81,14 +129,23 @@ export default {
 .table {
   border-collapse: collapse;
   margin: 8px;
-  width: 100%;
 }
 .tableHeaderCell {
   padding: 15px;
   border: 1px solid grey;
 }
+.filterCell {
+  padding: 0 15px;
+  border: 1px solid grey;
+}
+.filterCellText {
+  margin-bottom: 10px;
+}
 .tableCell {
   padding: 5px;
   border: 1px solid grey;
+}
+.filterInput {
+  width: 100%;
 }
 </style>

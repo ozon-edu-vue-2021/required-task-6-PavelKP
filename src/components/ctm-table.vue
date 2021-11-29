@@ -1,5 +1,10 @@
 <script lang="jsx">
+import ctmTableHeaderCell from './ctm-table-header-cell.vue'
+
 export default {
+	components: {
+		'ctm-table-header-cell': ctmTableHeaderCell,
+	},
   props: {
 		rows: {
 			type: Array,
@@ -50,12 +55,7 @@ export default {
 										/>
 								)}
 							</div>
-							{option.isSorting && 
-								(
-								<div class={this.$style?.sortingWrapper}>
-									<button>></button>
-								</div>
-							)}
+							{option.isSorting && <ctm-table-header-cell prop={option.prop} />}
 						</div>
 					</th>
 				);
@@ -134,11 +134,11 @@ export default {
   margin: 8px;
 }
 .cellWrapper {
-	display: flex;
-	position: relative;
+  display: flex;
+  position: relative;
 }
 .cellInnerWrapper {
-	width: 100%;
+  width: 100%;
 }
 .tableHeaderCell {
   padding: 15px;
@@ -147,7 +147,7 @@ export default {
 .filterCell {
   padding: 0 15px;
   border: 1px solid grey;
-	height: 70px;
+  height: 70px;
 }
 .filterCellText {
   margin-bottom: 10px;
@@ -158,9 +158,5 @@ export default {
 }
 .filterInput {
   width: 100%;
-}
-.sortingWrapper {
-	display: flex;
-  margin-top: auto;
 }
 </style>

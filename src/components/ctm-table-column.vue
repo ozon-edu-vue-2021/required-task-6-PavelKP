@@ -5,16 +5,19 @@ export default {
       type: String,
       required: true,
     },
-		title: {
-			type: String,
-			default: () => '',
-		},
-		width: {
-			type: String,
-		},
-		isFilter: {
-			type: Boolean,
-		}
+    title: {
+      type: String,
+      default: () => "",
+    },
+    width: {
+      type: String,
+    },
+    isFilter: {
+      type: Boolean,
+    },
+    isSorting: {
+      type: Boolean,
+    },
   },
 };
 </script>

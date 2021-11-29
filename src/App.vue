@@ -12,7 +12,12 @@
 
       <cm-table-column prop="name" title="Product name" :isFilter="true" />
 
-			<cm-table-column prop="category" title="Category" :isFilter="true" />
+			<cm-table-column 
+        prop="category" 
+        title="Category" 
+        :isFilter="true" 
+        :isSorting="true"
+      />
 
       <cm-table-column prop="description" title="Description" />
 

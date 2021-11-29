@@ -35,25 +35,28 @@ export default {
 					}
 				}
 
-				if (option.isFilter) {
-					return (
-						<th key={option.prop} class={this.$style?.filterCell} {...tableCellStyle}>
-							<div>
+				return (
+					<th key={option.prop} class={this.$style?.filterCell} {...tableCellStyle}>
+						<div class={this.$style?.cellWrapper}>
+							<div class={this.$style?.cellInnerWrapper}>
 								<div class={this.$style?.filterCellText}>
 									{renderedTitle}
 								</div>
-								<input
-									onInput={(evt) => this.changeFilter(evt, option.prop)}
-									class={this.$style?.filterInput} 
-								/>
+								{option.isFilter && 
+									(
+										<input
+											onInput={(evt) => this.changeFilter(evt, option.prop)}
+											class={this.$style?.filterInput} 
+										/>
+								)}
 							</div>
-						</th>
-					);
-				}
-
-				return (
-					<th key={option.prop} class={this.$style?.tableHeaderCell} {...tableCellStyle}>
-						{renderedTitle}
+							{option.isSorting && 
+								(
+								<div class={this.$style?.sortingWrapper}>
+									<button>></button>
+								</div>
+							)}
+						</div>
 					</th>
 				);
 			});
@@ -94,8 +97,8 @@ export default {
 			const len = this.filteredRows.length;
 
 			const filtered = this.rows.filter((row) => {
-				const field = row[prop].toLowerCase();
-				const value = evt.target.value.toLowerCase();
+				const field = row[prop].toLowerCase().trim();
+				const value = evt.target.value.toLowerCase().trim();
 
 				return field.includes(value);
 			})
@@ -130,6 +133,13 @@ export default {
   border-collapse: collapse;
   margin: 8px;
 }
+.cellWrapper {
+	display: flex;
+	position: relative;
+}
+.cellInnerWrapper {
+	width: 100%;
+}
 .tableHeaderCell {
   padding: 15px;
   border: 1px solid grey;
@@ -137,6 +147,7 @@ export default {
 .filterCell {
   padding: 0 15px;
   border: 1px solid grey;
+	height: 70px;
 }
 .filterCellText {
   margin-bottom: 10px;
@@ -147,5 +158,9 @@ export default {
 }
 .filterInput {
   width: 100%;
+}
+.sortingWrapper {
+	display: flex;
+  margin-top: auto;
 }
 </style>

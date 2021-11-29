@@ -1,9 +1,9 @@
 <script lang="jsx">
-import ctmTableHeaderCell from './ctm-table-header-cell.vue'
+import ctmTableSortingButton from './ctm-table-sorting-button.vue'
 
 export default {
 	components: {
-		'ctm-table-header-cell': ctmTableHeaderCell,
+		'ctm-table-sorting-button': ctmTableSortingButton,
 	},
   props: {
 		rows: {
@@ -55,7 +55,8 @@ export default {
 										/>
 								)}
 							</div>
-							{option.isSorting && <ctm-table-header-cell prop={option.prop} />}
+							{option.isSorting && 
+								<ctm-table-sorting-button prop={option.prop} />}
 						</div>
 					</th>
 				);

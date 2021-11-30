@@ -10,6 +10,7 @@ module.exports = {
 	"rules": {
 		'no-debugger': 0,
 		'no-unused-vars': 0,
+		'indent': ["error", "tab"],
 	},
 	"parserOptions": {
 		"parser": "babel-eslint"

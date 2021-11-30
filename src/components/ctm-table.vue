@@ -1,19 +1,27 @@
 <script lang="jsx">
 import ctmTableSortingButton from './ctm-table-sorting-button.vue'
+import { getPosts } from '../api/api.js'
 
 export default {
 	components: {
 		'ctm-table-sorting-button': ctmTableSortingButton,
 	},
-  props: {
+	props: {
 		rows: {
 			type: Array,
-			default: () => [],
+			default: () => [{}],
 		},
-  },
+		isFetching: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
-			filteredRows: [],
+			sortingType: {
+				price: 'ASC',
+			},
+			sorting: {},
 		}
 	},
 	methods: {
@@ -23,15 +31,15 @@ export default {
 			const options = filteredSlots.map((slot) => Object.assign(
 				{},
 				{
-				...slot.componentOptions.propsData,
-				scopedSlots: slot.data?.scopedSlots || {},
+					...slot.componentOptions.propsData,
+					scopedSlots: slot.data?.scopedSlots || {},
 				}
 			))
 
 			return options;
 		},
 		renderHeader(h, columnOptions) {
-			const headerData = columnOptions.map((option) => {
+			const headerData = columnOptions.map((option, i) => {
 				const renderedTitle = option.scopedSlots.title ? option.scopedSlots.title() : option.title
 
 				const tableCellStyle = {
@@ -41,7 +49,7 @@ export default {
 				}
 
 				return (
-					<th key={option.prop} class={this.$style?.filterCell} {...tableCellStyle}>
+					<th key={i} class={this.$style?.filterCell} {...tableCellStyle}>
 						<div class={this.$style?.cellWrapper}>
 							<div class={this.$style?.cellInnerWrapper}>
 								<div class={this.$style?.filterCellText}>
@@ -53,10 +61,14 @@ export default {
 											onInput={(evt) => this.changeFilter(evt, option.prop)}
 											class={this.$style?.filterInput} 
 										/>
-								)}
+									)}
 							</div>
 							{option.isSorting && 
-								<ctm-table-sorting-button prop={option.prop} />}
+								<ctm-table-sorting-button 
+									onChangeSorting={() => {debugger}}
+									prop={option.prop}
+									type={this.sortingType.price}
+								/>}
 						</div>
 					</th>
 				);
@@ -69,7 +81,7 @@ export default {
 			)
 		},
 		renderRows(h, columnOptions) {
-			return this.filteredRows.map((row, index) => {
+			return this.rows.map((row, index) => {
 				return (
 					<tr key={row.id || index}>
 						{this.renderCell(h, row, columnOptions)}
@@ -94,23 +106,22 @@ export default {
 				);
 			})
 		},
-		changeFilter(evt, prop) {
-			const len = this.filteredRows.length;
+		async changeFilter(evt, prop) {
+			const value = evt.target.value.trim();
 
-			const filtered = this.rows.filter((row) => {
-				const field = row[prop].toLowerCase().trim();
-				const value = evt.target.value.toLowerCase().trim();
+			this.sorting = {
+				...this.sorting,
+				[prop]: value,
+			}
 
-				return field.includes(value);
-			})
-
-			this.filteredRows = filtered;
+			this.$emit('sorting-change', this.sorting)
 		}
 	},
-	created() {
-		this.filteredRows = this.rows.slice();
-	},
 	render(h) {
+		if (this.isFetching) {
+			return <p>Loading...</p>
+		}
+
 		const columnOptions = this.getColumnOptions();
 		const tableHeader = this.renderHeader(h, columnOptions);
 		const tableRows = this.renderRows(h, columnOptions);
@@ -149,9 +160,6 @@ export default {
   padding: 0 15px;
   border: 1px solid grey;
   height: 70px;
-}
-.filterCellText {
-  margin-bottom: 10px;
 }
 .tableCell {
   padding: 5px;

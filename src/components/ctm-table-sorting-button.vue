@@ -10,17 +10,19 @@ export default {
 		prop: {
 			type: String,
 		},
-	},
-	data() {
-		return {
-			type: SortingType.ASC,
-		}
+		type: {
+			type: String,
+		},
 	},
 	methods: {
 		handleButtonClick() {
 			this.type = this.type === SortingType.ASC 
 				? SortingType.DESC 
 				: SortingType.ASC;
+
+			this.$emit('change-sorting', {
+				[this.prop]: this.type, 
+			});
 		},
 	},
 	render(h, context) {

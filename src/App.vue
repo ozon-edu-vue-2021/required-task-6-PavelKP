@@ -4,8 +4,7 @@
       :rows="rows"
 			:activeSorting="queryData.sorting"
       :isFetching="isFetching"
-      @filter-change="updateTable"
-      @sorting-change="updateTable"
+      @update-table="updateTable"
     >
       <cm-table-column prop="id" title="ID" />
 

@@ -50,7 +50,7 @@ export default {
 				}
 
 				const activeSorting = Object.entries(this.activeSorting || {})?.[0] || [];
-				
+
 				return (
 					<th key={i} class={this.$style?.filterCell} {...tableCellStyle}>
 						<div class={this.$style?.cellWrapper}>
@@ -117,7 +117,7 @@ export default {
 				[prop]: value,
 			}
 
-			this.$emit('filter-change', {
+			this.$emit('update-table', {
 				type: 'FILTERING',
 				payload: this.filter,
 			});
@@ -126,7 +126,7 @@ export default {
 			const { payload } = action;
 
 			this.sorting = payload;
-			this.$emit('sorting-change', action);
+			this.$emit('update-table', action);
 		},
 	},
 	render(h) {

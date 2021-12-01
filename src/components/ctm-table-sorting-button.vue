@@ -10,32 +10,42 @@ export default {
 		prop: {
 			type: String,
 		},
-	},
-	data() {
-		return {
-			activeSorting: SortingType.DESC,
+		activeSorting: {
+			type: Object,
 		}
 	},
 	methods: {
 		handleButtonClick() {
-			this.activeSorting = this.activeSorting === SortingType.ASC 
-				? SortingType.DESC 
-				: SortingType.ASC;
+			const [sortingProp, sortingType] = this.activeSorting;
+			let newActiveSorting = SortingType.ASC;
+
+			if (sortingProp === this.prop) {
+				newActiveSorting = this.activeSorting[1] === SortingType.ASC 
+					? SortingType.DESC 
+					: SortingType.ASC;
+			}
 
 			this.$emit('changeSorting', {
 				type: 'SORTING',
 				payload: {
-					[this.prop]: this.activeSorting, 
+					[this.prop]: newActiveSorting,
 				}
 			});
 		},
 	},
 	render(h, context) {
-		const icon = this.activeSorting === SortingType.DESC ? '↓' : '↑';
+		let icon = '↓';
+		let isActive = false;
 
+		const [sortingProp, sortingType] = this.activeSorting;
+		if (sortingProp === this.prop) {
+			icon = sortingType === SortingType.DESC ? '↓' : '↑';
+			isActive = true;
+		}
+		
 		return (
 			<div class={this.$style?.sortingWrapper}>
-				<button onClick={this.handleButtonClick}>
+				<button onClick={this.handleButtonClick} class={isActive && this.$style.activeSorting}>
 					{icon}
 				</button>
 			</div>
@@ -48,5 +58,8 @@ export default {
 .sortingWrapper {
   display: flex;
   margin-top: auto;
+}
+.activeSorting {
+	border: 2px solid grey;
 }
 </style>

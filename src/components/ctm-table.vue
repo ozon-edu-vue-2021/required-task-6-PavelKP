@@ -15,12 +15,12 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		activeSorting: {
+			type: Object,
+		},
 	},
 	data() {
 		return {
-			sortingType: {
-				price: 'ASC',
-			},
 			filter: {},
 			sorting: {},
 		}
@@ -49,6 +49,8 @@ export default {
 					}
 				}
 
+				const activeSorting = Object.entries(this.activeSorting || {})?.[0] || [];
+				
 				return (
 					<th key={i} class={this.$style?.filterCell} {...tableCellStyle}>
 						<div class={this.$style?.cellWrapper}>
@@ -68,7 +70,7 @@ export default {
 								<ctm-table-sorting-button 
 									onChangeSorting={this.changeSorting}
 									prop={option.prop}
-									type={this.sortingType.price}
+									activeSorting={activeSorting}
 								/>}
 						</div>
 					</th>

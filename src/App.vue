@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <ctm-table :rows="rows" :isFetching="isFetching" @sorting-change="sortData">
+    <ctm-table
+      :rows="rows"
+      :isFetching="isFetching"
+      @filter-change="updateTable"
+      @sorting-change="updateTable"
+    >
       <cm-table-column prop="id" title="ID" />
 
       <cm-table-column prop="id" title="User photo" width="104">
@@ -21,9 +26,9 @@
         :isSorting="true"
       />
 
-      <cm-table-column prop="website" title="Website" />
+      <cm-table-column prop="website" title="Website" :isSorting="true" />
 
-      <cm-table-column prop="phone" title="Phone" :isSorting="true" />
+      <cm-table-column prop="phone" title="Phone" />
 
       <cm-table-column prop="email">
         <template v-slot:title>
@@ -52,11 +57,15 @@ export default {
 		return {
 			rows: [],
 			isFetching: false,
+			queryData: {
+				filter: {},
+				sorting: {},
+			},
 		};
 	},
 	methods: {
-		objectToQuery(filterData) {
-			let str = "?";
+		filterToQuery(filterData) {
+			let str = "";
 
 			Object.entries(filterData).map(([key, value], i, arr) => {
 				str += `${key}_like=${value}`;
@@ -66,9 +75,40 @@ export default {
 			});
 			return str;
 		},
-		async sortData(payload) {
-			const queryParam = this.objectToQuery(payload);
-			const posts = await getPosts(queryParam);
+		sortingToQuery(filterData) {
+			let str = "";
+
+			Object.entries(filterData).map(([key, value]) => {
+				str += `_sort=${key}&_order=${value}`;
+			});
+			return str;
+		},
+		async updateTable(action) {
+			const { type, payload } = action;
+
+			if (type === 'SORTING') {
+				this.queryData.sorting = payload;
+			}
+			if (type === 'FILTERING') {
+				this.queryData.filter = payload;
+			}
+
+			const strings = [
+				this.filterToQuery(this.queryData.filter),
+				this.sortingToQuery(this.queryData.sorting),
+			];
+
+			let finalQuery = '';
+			strings.forEach((string, i ,arr) => {
+				if (string) {
+					finalQuery += string;
+				}
+				if (i !== arr.length - 1) {
+					finalQuery += "&";
+				}
+			});
+
+			const posts = await getPosts(`?${finalQuery}`);
 			this.rows = posts;
 		},
 	},

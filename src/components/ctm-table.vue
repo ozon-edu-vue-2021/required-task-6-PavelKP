@@ -21,6 +21,7 @@ export default {
 			sortingType: {
 				price: 'ASC',
 			},
+			filter: {},
 			sorting: {},
 		}
 	},
@@ -65,7 +66,7 @@ export default {
 							</div>
 							{option.isSorting && 
 								<ctm-table-sorting-button 
-									onChangeSorting={() => {debugger}}
+									onChangeSorting={this.changeSorting}
 									prop={option.prop}
 									type={this.sortingType.price}
 								/>}
@@ -109,13 +110,22 @@ export default {
 		async changeFilter(evt, prop) {
 			const value = evt.target.value.trim();
 
-			this.sorting = {
-				...this.sorting,
+			this.filter = {
+				...this.filter,
 				[prop]: value,
 			}
 
-			this.$emit('sorting-change', this.sorting)
-		}
+			this.$emit('filter-change', {
+				type: 'FILTERING',
+				payload: this.filter,
+			});
+		},
+		async changeSorting(action) {
+			const { payload } = action;
+
+			this.sorting = payload;
+			this.$emit('sorting-change', action);
+		},
 	},
 	render(h) {
 		if (this.isFetching) {

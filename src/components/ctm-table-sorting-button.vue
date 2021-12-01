@@ -1,8 +1,8 @@
 <script lang="jsx">
 
 const SortingType = {
-	ASC: 'ASC',
-	DESC: 'DESC',
+	ASC: 'asc',
+	DESC: 'desc',
 }
 
 export default {
@@ -10,23 +10,28 @@ export default {
 		prop: {
 			type: String,
 		},
-		type: {
-			type: String,
-		},
+	},
+	data() {
+		return {
+			activeSorting: SortingType.DESC,
+		}
 	},
 	methods: {
 		handleButtonClick() {
-			this.type = this.type === SortingType.ASC 
+			this.activeSorting = this.activeSorting === SortingType.ASC 
 				? SortingType.DESC 
 				: SortingType.ASC;
 
-			this.$emit('change-sorting', {
-				[this.prop]: this.type, 
+			this.$emit('changeSorting', {
+				type: 'SORTING',
+				payload: {
+					[this.prop]: this.activeSorting, 
+				}
 			});
 		},
 	},
 	render(h, context) {
-		const icon = this.type === SortingType.ASC ? '↑' : '↓';
+		const icon = this.activeSorting === SortingType.DESC ? '↓' : '↑';
 
 		return (
 			<div class={this.$style?.sortingWrapper}>

@@ -1,15 +1,29 @@
 <script lang="jsx">
-import ctmTableSortingButton from './ctm-table-sorting-button.vue'
-import { getPosts } from '../api/api.js'
+import ctmTableSortingButton from './ctm-table-sorting-button.vue';
+import ctmTablePaginator from './ctm-table-paginator.vue';
+import { getPosts } from '../api/api.js';
 
 export default {
 	components: {
 		'ctm-table-sorting-button': ctmTableSortingButton,
+		'ctm-table-paginator': ctmTablePaginator,
 	},
 	props: {
 		rows: {
 			type: Array,
 			default: () => [{}],
+		},
+		totalPages: {
+			type: Number,
+			default: 0
+		},
+		currentPage: {
+			type: Number,
+			default: 0
+		},
+		staticPaging: {
+			type: Boolean,
+			default: true
 		},
 		isFetching: {
 			type: Boolean,
@@ -139,14 +153,17 @@ export default {
 		const tableRows = this.renderRows(h, columnOptions);
 
 		return (
-			<table class={this.$style?.table}>
-				<thead>
-					{tableHeader}
-				</thead>
-				<tbody>
-					{...tableRows}
-				</tbody>
-			</table>
+			<div>
+				<table class={this.$style?.table}>
+					<thead>
+						{tableHeader}
+					</thead>
+					<tbody>
+							{...tableRows}
+					</tbody>
+				</table>
+				{this.staticPaging && <ctm-table-paginator />}
+			</div>
 		)
 	}
 }

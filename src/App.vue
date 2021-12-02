@@ -4,9 +4,12 @@
       :rows="rows"
 			:activeSorting="queryData.sorting"
       :isFetching="isFetching"
+			:totalPages="totalPages"
+			:current-page="currentPage"
+			:static-paging="true"
       @update-table="updateTable"
     >
-      <cm-table-column prop="id" title="ID" />
+      <cm-table-column prop="id" title="Post ID" />
 
       <cm-table-column prop="id" title="User photo" width="104">
         <template v-slot:body="{ id }">
@@ -17,20 +20,11 @@
         </template>
       </cm-table-column>
 
-      <cm-table-column prop="name" title="Full name" :isFilter="true" />
+      <cm-table-column prop="name" title="Full name" :isFilter="true" :isSorting="true"/>
 
-      <cm-table-column
-        prop="username"
-        title="Username"
-        :isFilter="true"
-        :isSorting="true"
-      />
+      <cm-table-column prop="body" title="Post text"/>
 
-      <cm-table-column prop="website" title="Website" :isSorting="true" />
-
-      <cm-table-column prop="phone" title="Phone" />
-
-      <cm-table-column prop="email">
+      <cm-table-column prop="email" :isFilter="true" :isSorting="true">
         <template v-slot:title>
           <b>email</b>
         </template>
@@ -61,6 +55,9 @@ export default {
 				filter: {},
 				sorting: {},
 			},
+			currentPage: 1,
+			limit: 10,
+			totalPages: 0,
 		};
 	},
 	methods: {
@@ -83,7 +80,10 @@ export default {
 			});
 			return str;
 		},
-		async updateTable(action) {
+		getPagingQuery() {
+			return `_page=${this.currentPage}&_limit=${this.limit}`;
+		},
+		async updateTable(action = {}) {
 			const { type, payload } = action;
 
 			if (type === 'SORTING') {
@@ -96,28 +96,30 @@ export default {
 			const strings = [
 				this.filterToQuery(this.queryData.filter),
 				this.sortingToQuery(this.queryData.sorting),
+				this.getPagingQuery(),
 			];
 
 			let finalQuery = '';
+
 			strings.forEach((string, i ,arr) => {
 				if (string) {
 					finalQuery += string;
 				}
-				if (i !== arr.length - 1) {
+				if (i !== arr.length - 1 && string) {
 					finalQuery += "&";
 				}
 			});
 
-			const posts = await getPosts(`?${finalQuery}`);
+			const [posts, total] = await getPosts(`?${finalQuery}`);
 			this.rows = posts;
+			this.totalPages = total / this.limit;
 		},
 	},
 	async created() {
 		this.isFetching = true;
 
-		const posts = await getPosts();
-		this.rows = posts;
-
+		await this.updateTable();
+		
 		this.isFetching = false;
 	},
 };

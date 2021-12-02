@@ -42,7 +42,9 @@ export default {
 			icon = sortingType === SortingType.DESC ? '↓' : '↑';
 			isActive = true;
 		}
-		
+
+		this.$listeners
+
 		return (
 			<div class={this.$style?.sortingWrapper}>
 				<button onClick={this.handleButtonClick} class={isActive && this.$style.activeSorting}>

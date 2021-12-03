@@ -131,16 +131,16 @@ export default {
 				[prop]: value,
 			}
 
-			this.$emit('update-table', {
+			this.$listeners.updateTable({
 				type: 'FILTERING',
 				payload: this.filter,
 			});
 		},
 		async changeSorting(action) {
 			const { payload } = action;
-
+			
 			this.sorting = payload;
-			this.$emit('update-table', action);
+			this.$listeners.updateTable(action);
 		},
 	},
 	render(h) {
@@ -151,6 +151,7 @@ export default {
 		const columnOptions = this.getColumnOptions();
 		const tableHeader = this.renderHeader(h, columnOptions);
 		const tableRows = this.renderRows(h, columnOptions);
+		const { updateTable } = this.$listeners;
 
 		return (
 			<div>
@@ -162,7 +163,12 @@ export default {
 							{...tableRows}
 					</tbody>
 				</table>
-				{this.staticPaging && <ctm-table-paginator />}
+				{this.staticPaging 
+					&& <ctm-table-paginator
+						on={{updateTable: updateTable}}
+						totalPages={this.totalPages} 
+						currentPage={this.currentPage}
+					/>}
 			</div>
 		)
 	}

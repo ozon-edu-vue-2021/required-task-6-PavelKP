@@ -7,7 +7,7 @@
 			:totalPages="totalPages"
 			:current-page="currentPage"
 			:static-paging="true"
-      @update-table="updateTable"
+      @updateTable="updateTable"
     >
       <cm-table-column prop="id" title="Post ID" />
 
@@ -80,23 +80,28 @@ export default {
 			});
 			return str;
 		},
-		getPagingQuery() {
-			return `_page=${this.currentPage}&_limit=${this.limit}`;
+		getPagingQuery(newPage) {
+			return `_page=${newPage}&_limit=${this.limit}`;
 		},
 		async updateTable(action = {}) {
 			const { type, payload } = action;
 
 			if (type === 'SORTING') {
 				this.queryData.sorting = payload;
+				this.currentPage = 1;
 			}
 			if (type === 'FILTERING') {
 				this.queryData.filter = payload;
+				this.currentPage = 1;
+			}
+			if (type === 'PAGING') {
+				this.currentPage = payload;
 			}
 
 			const strings = [
 				this.filterToQuery(this.queryData.filter),
 				this.sortingToQuery(this.queryData.sorting),
-				this.getPagingQuery(),
+				this.getPagingQuery(this.currentPage),
 			];
 
 			let finalQuery = '';
@@ -112,7 +117,7 @@ export default {
 
 			const [posts, total] = await getPosts(`?${finalQuery}`);
 			this.rows = posts;
-			this.totalPages = total / this.limit;
+			this.totalPages = Math.ceil(total / this.limit);
 		},
 	},
 	async created() {

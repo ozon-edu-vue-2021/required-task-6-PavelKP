@@ -178,7 +178,7 @@ export default {
 <style module>
 .table {
   border-collapse: collapse;
-  margin: 8px;
+	table-layout: fixed;
 }
 .cellWrapper {
   display: flex;

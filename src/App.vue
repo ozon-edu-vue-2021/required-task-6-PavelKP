@@ -9,9 +9,9 @@
 			:static-paging="true"
       @updateTable="updateTable"
     >
-      <cm-table-column prop="id" title="Post ID" />
+      <cm-table-column prop="id" title="Post ID" width="100"/>
 
-      <cm-table-column prop="id" title="User photo" width="104">
+      <cm-table-column prop="id" title="User photo" width="140">
         <template v-slot:body="{ id }">
           <img
             :src="`https://randomuser.me/api/portraits/women/${id}.jpg`"
@@ -20,11 +20,11 @@
         </template>
       </cm-table-column>
 
-      <cm-table-column prop="name" title="Full name" :isFilter="true" :isSorting="true"/>
+      <cm-table-column prop="name" title="Full name" :isFilter="true" :isSorting="true" width="300"/>
 
-      <cm-table-column prop="body" title="Post text"/>
+      <cm-table-column prop="body" title="Post text" width="400"/>
 
-      <cm-table-column prop="email" :isFilter="true" :isSorting="true">
+      <cm-table-column prop="email" :isFilter="true" :isSorting="true" width="200">
         <template v-slot:title>
           <b>email</b>
         </template>
@@ -131,6 +131,10 @@ export default {
 </script>
 
 <style>
+body {
+	padding: 0;
+	margin: 0;
+}
 * {
   box-sizing: border-box;
 }

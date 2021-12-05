@@ -45,7 +45,7 @@ export default {
 		const { updateTable }= this.$listeners;
 
 		return (
-			<div>
+			<div class={this.$style.pagination}>
 				<span
 					class={this.$style.control}
 					on={{click: () => updateTable({type: 'PAGING', payload: 1})}}>
@@ -84,21 +84,29 @@ export default {
 </script>
 
 <style module>
+.pagination {
+  height: 48px;
+  width: 100%;
+  border-bottom: 1px solid #c8cacc;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
 .control {
   width: 24px;
   height: 24px;
   margin-right: 8px;
 }
 .control:last-of-type {
-	margin-right: 0;
+  margin-right: 0;
 }
 .control:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 .control.active {
-	color: cornflowerblue;
-	background: ivory;
-	border: 1px solid #c8cacc;
-	border-radius: 6px;
+  color: cornflowerblue;
+  background: ivory;
+  border: 1px solid #c8cacc;
+  border-radius: 6px;
 }
 </style>

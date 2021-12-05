@@ -11,7 +11,7 @@ export default {
 	props: {
 		rows: {
 			type: Array,
-			default: () => [{}],
+			default: () => [],
 		},
 		totalPages: {
 			type: Number,
@@ -163,12 +163,13 @@ export default {
 							{...tableRows}
 					</tbody>
 				</table>
-				{this.staticPaging 
-					&& <ctm-table-paginator
+				{(this.staticPaging && this.rows.length)
+					? <ctm-table-paginator
 						on={{updateTable: updateTable}}
 						totalPages={this.totalPages} 
 						currentPage={this.currentPage}
-					/>}
+					/>
+					: <p>Ничего не найдено</p>}
 			</div>
 		)
 	}
@@ -178,7 +179,7 @@ export default {
 <style module>
 .table {
   border-collapse: collapse;
-	table-layout: fixed;
+  table-layout: fixed;
 }
 .cellWrapper {
   display: flex;
